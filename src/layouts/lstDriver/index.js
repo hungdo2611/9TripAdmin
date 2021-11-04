@@ -27,11 +27,11 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import moment from 'moment'
 
-import { Table, Input, notification } from 'antd';
+import { Table, Input, notification, Space } from 'antd';
 
 
 // Data
-import { getListDriverAPI, getInfoDriver } from '../../api/DriverApi'
+import { getListDriverAPI, getInfoDriver, adminLockedAccountAPI, adminUnLockedAccountAPI } from '../../api/DriverApi'
 
 const { Search } = Input;
 
@@ -48,6 +48,7 @@ class lstDriver extends Component {
     }
     async componentDidMount() {
         const reqDriver = await getListDriverAPI(1, 10)
+        console.log("reqDriver", reqDriver)
         this.setState({ lst_driver: reqDriver.data, total: reqDriver.total })
         this.tempData = reqDriver.data;
     }
@@ -83,6 +84,52 @@ class lstDriver extends Component {
             search: '',
             state: { data: data }
         })
+    }
+    onLockOrUnlock = async (data) => {
+        const { lst_driver } = this.state;
+        let indexUpdate = lst_driver.findIndex(vl => vl._id == data._id);
+        console.log("indexUpdate", indexUpdate)
+        if (data.is_active) {
+            let req = await adminLockedAccountAPI(data._id)
+            if (req && !req.err) {
+                notification["success"]({
+                    message: 'Khoá thành công',
+                    description:
+                        'OK',
+                });
+                let newArr = lst_driver;
+                newArr[indexUpdate].is_active = false;
+                console.log("newArr", newArr)
+                this.setState({ lst_driver: newArr })
+
+            } else {
+                notification["error"]({
+                    message: 'Đã có lỗi xảy ra',
+                    description:
+                        'Lỗi',
+                });
+            }
+        } else {
+            let req = await adminUnLockedAccountAPI(data._id)
+            if (req && !req.err) {
+                notification["success"]({
+                    message: 'Mở khoá thành công',
+                    description:
+                        'OK',
+                });
+                let newArr = lst_driver;
+                newArr[indexUpdate].is_active = true;
+                console.log("newArr", newArr)
+                this.setState({ lst_driver: newArr })
+            } else {
+                notification["error"]({
+                    message: 'Đã có lỗi xảy ra',
+                    description:
+                        'Lỗi',
+                });
+            }
+        }
+        console.log("data123", data)
     }
     render() {
         const columns = [
@@ -128,6 +175,15 @@ class lstDriver extends Component {
             {
                 title: 'Danh sách chuyến',
                 render: dt => <a onClick={() => this.onClickItem(dt)}> Xem</a>,
+            },
+            {
+                title: 'Hành động',
+                key: 'action',
+                render: (text, record) => (
+                    <Space size="middle">
+                        <a onClick={() => this.onLockOrUnlock(record)}>{record.is_active ? 'Khoá tài khoản' : 'Mở khoá tài khoản'}</a>
+                    </Space>
+                ),
             },
         ];
         const { lst_driver, total, isloading } = this.state

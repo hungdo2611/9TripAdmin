@@ -22,4 +22,17 @@ export const getRecentJourneyAPI = (id) => {
         method: 'GET'
     })
 }
-
+export const adminLockedAccountAPI = (id) => {
+    return api.makeAuthRequest({
+        url: `/admin/lock/driver`,
+        method: 'POST',
+        data: { _id: id }
+    })
+}
+export const adminUnLockedAccountAPI = (id) => {
+    return api.makeAuthRequest({
+        url: `/admin/unlock/driver`,
+        method: 'POST',
+        data: { _id: id }
+    })
+}

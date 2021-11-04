@@ -51,6 +51,8 @@ import lstDriver from './layouts/lstDriver'
 import recentTrip from './layouts/lstDriver/recentTrip'
 import lstCustomer from './layouts/lstCustomer'
 import recentBooking from './layouts/lstCustomer/recentBooking'
+import lstLicense from './layouts/lstLicense'
+
 // 9Trip Admin React icons
 import Shop from "examples/Icons/Shop";
 import Office from "examples/Icons/Office";
@@ -109,6 +111,16 @@ const routes = [
     icon: <Document size="12px" />,
     component: recentBooking,
     noCollapse: true,
+  },
+  {
+    type: "collapse",
+    name: "Danh sách hồ sơ phê duyệt",
+    key: "License",
+    route: "/licenses",
+    icon: <Document size="12px" />,
+    component: lstLicense,
+    noCollapse: true,
+    protected: true,
   },
   {
     type: "collapse",
