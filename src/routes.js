@@ -52,7 +52,8 @@ import recentTrip from './layouts/lstDriver/recentTrip'
 import lstCustomer from './layouts/lstCustomer'
 import recentBooking from './layouts/lstCustomer/recentBooking'
 import lstLicense from './layouts/lstLicense'
-
+import lstCoupon from './layouts/lstCoupon'
+import SendNotification from './layouts/sendNotification'
 // 9Trip Admin React icons
 import Shop from "examples/Icons/Shop";
 import Office from "examples/Icons/Office";
@@ -119,6 +120,26 @@ const routes = [
     route: "/licenses",
     icon: <Document size="12px" />,
     component: lstLicense,
+    noCollapse: true,
+    protected: true,
+  },
+  {
+    type: "collapse",
+    name: "D/S Mã giảm giá",
+    key: "Coupon",
+    route: "/coupons",
+    icon: <Document size="12px" />,
+    component: lstCoupon,
+    noCollapse: true,
+    protected: true,
+  },
+  {
+    type: "collapse",
+    name: "Gửi thông báo",
+    key: "Notification",
+    route: "/notification",
+    icon: <Document size="12px" />,
+    component: SendNotification,
     noCollapse: true,
     protected: true,
   },
