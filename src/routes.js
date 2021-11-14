@@ -54,6 +54,7 @@ import recentBooking from './layouts/lstCustomer/recentBooking'
 import lstLicense from './layouts/lstLicense'
 import lstCoupon from './layouts/lstCoupon'
 import SendNotification from './layouts/sendNotification'
+import lstCharge from './layouts/lstCharge'
 // 9Trip Admin React icons
 import Shop from "examples/Icons/Shop";
 import Office from "examples/Icons/Office";
@@ -140,6 +141,16 @@ const routes = [
     route: "/notification",
     icon: <Document size="12px" />,
     component: SendNotification,
+    noCollapse: true,
+    protected: true,
+  },
+  {
+    type: "collapse",
+    name: "Danh sách nạp tiền",
+    key: "Charge",
+    route: "/charge",
+    icon: <Document size="12px" />,
+    component: lstCharge,
     noCollapse: true,
     protected: true,
   },

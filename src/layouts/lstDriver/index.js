@@ -173,6 +173,14 @@ class lstDriver extends Component {
 
             },
             {
+                title: 'Rating *',
+                key: 'ratingPoint',
+                dataIndex: 'ratingPoint',
+                render: dt => <text>{dt.value.toFixed(2)}</text>,
+
+
+            },
+            {
                 title: 'Danh sách chuyến',
                 render: dt => <a onClick={() => this.onClickItem(dt)}> Xem</a>,
             },

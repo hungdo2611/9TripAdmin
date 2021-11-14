@@ -56,14 +56,6 @@ class lstCoupon extends Component {
         this.tempData = reqCoupon.data;
     }
 
-    onClickItem = (data) => {
-        const { history } = this.props;
-        history.push({
-            pathname: '/recentBooking',
-            search: '',
-            state: { data: data }
-        })
-    }
     onChangePage = async (page, pageSize) => {
         const reqCoupon = await getListCoupon(page, pageSize)
         this.setState({ page: page })
