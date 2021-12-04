@@ -27,11 +27,11 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import moment from 'moment'
 
-import { Table, Input, notification, Space } from 'antd';
+import { Table, Input, notification, Space, Button, Modal, Form, DatePicker, InputNumber } from 'antd';
 
 
 // Data
-import { getListDriverAPI, getInfoDriver, adminLockedAccountAPI, adminUnLockedAccountAPI } from '../../api/DriverApi'
+import { getListDriverAPI, getInfoDriver, adminLockedAccountAPI, adminUnLockedAccountAPI, adminAddPointToDriver } from '../../api/DriverApi'
 
 const { Search } = Input;
 
@@ -42,9 +42,13 @@ class lstDriver extends Component {
         this.state = {
             lst_driver: [],
             total: 0,
-            isloading: false
+            isloading: false,
+            isModalVisible: false,
+            currentDriver: null
         }
-        this.tempData = []
+        this.tempData = [];
+        this.formRef = React.createRef();
+
     }
     async componentDidMount() {
         const reqDriver = await getListDriverAPI(1, 10)
@@ -131,6 +135,93 @@ class lstDriver extends Component {
         }
         console.log("data123", data)
     }
+    onFinishForm = async (values) => {
+        console.log("values", values)
+        const { currentDriver } = this.state;
+        if (!currentDriver) {
+            return
+        }
+        const body = {
+            id: currentDriver._id,
+            point: values.amount,
+            title: values.title,
+            body: values.body
+        }
+        let reqAdd = await adminAddPointToDriver(body);
+        if (reqAdd && !reqAdd.err) {
+            notification["success"]({
+                message: 'Mở khoá thành công',
+                description:
+                    'OK',
+            });
+            this.setState({ isModalVisible: false })
+        } else {
+            notification["error"]({
+                message: 'Đã có lỗi xảy ra',
+                description:
+                    'Lỗi',
+            });
+        }
+
+    }
+    fillData = () => {
+        this.formRef.current.setFieldsValue({
+            title: 'Chào mừng tham gia 9Trip',
+            body: '9Trip tặng bạn 10.000 đ để sử dụng dịch vụ',
+            amount: 10000
+        });
+    }
+    renderFormAddPoint = () => {
+        return <Form
+            name="basic"
+            labelCol={{ span: 8 }}
+            wrapperCol={{ span: 16 }}
+            initialValues={{ remember: true }}
+            onFinish={values => this.onFinishForm(values)}
+            onFinishFailed={failed => console.log("onFinishFailed", failed)}
+            ref={this.formRef}
+            autoComplete="off"
+        >
+            <Form.Item
+                label="Tiêu đề"
+                name="title"
+                rules={[{ required: true, message: 'Please input your CODE!' }]}
+            >
+                <Input placeholder="Nhập tiêu đề" />
+            </Form.Item>
+            <Form.Item
+                label="Nội dung"
+                name="body"
+                rules={[{ required: true, message: 'Please input your content!' }]}
+            >
+                <Input placeholder="Nhập nội dung" />
+            </Form.Item>
+            <Form.Item
+                label="Số điểm"
+                name="amount"
+                rules={[{ required: true, message: 'Code is number & not be blank' }]}
+            >
+                <InputNumber
+                    style={{ width: 200 }}
+                    placeholder="Số điểm cộng cho tài xế"
+                    formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                    parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                />
+            </Form.Item>
+
+            <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                <Button onClick={() => this.fillData()} type="primary" >
+                    Fill dữ liệu mẫu
+                </Button>
+            </Form.Item>
+            <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                <Button type="primary" htmlType="submit">
+                    Cộng tiền
+                </Button>
+            </Form.Item>
+        </Form>
+    }
+
     render() {
         const columns = [
             {
@@ -188,13 +279,14 @@ class lstDriver extends Component {
                 title: 'Hành động',
                 key: 'action',
                 render: (text, record) => (
-                    <Space size="middle">
-                        <a onClick={() => this.onLockOrUnlock(record)}>{record.is_active ? 'Khoá tài khoản' : 'Mở khoá tài khoản'}</a>
+                    <Space style={{ flexDirection: "column", display: "flex" }} size="middle">
+                        <Button style={{ width: 130 }} danger type="primary" onClick={() => this.onLockOrUnlock(record)}>{record.is_active ? 'Khoá tài khoản' : 'Mở khoá tài khoản'}</Button>
+                        <Button style={{ width: 130 }} type="primary" onClick={() => this.setState({ isModalVisible: true, currentDriver: record })}>Cộng tiền</Button>
                     </Space>
                 ),
             },
         ];
-        const { lst_driver, total, isloading } = this.state
+        const { lst_driver, total, isloading, isModalVisible } = this.state
         return (
             <DashboardLayout>
                 <DashboardNavbar />
@@ -214,6 +306,17 @@ class lstDriver extends Component {
                         </Card>
                     </SuiBox>
                 </SuiBox>
+                <Modal
+                    title="Cộng tiền cho tài xế"
+                    visible={isModalVisible}
+                    onCancel={() => this.setState({ isModalVisible: false })}
+                    footer={[
+                        <Button key="back" onClick={() => this.setState({ isModalVisible: false })}>
+                            Return
+                        </Button>
+                    ]}>
+                    {this.renderFormAddPoint()}
+                </Modal>
                 <Footer />
             </DashboardLayout>
         );

@@ -97,7 +97,7 @@ class SendNotification extends Component {
                                     name="app_name"
                                     rules={[{ required: true, message: 'Please input your app_name!' }]}
                                 >
-                                    <Select style={{ width: 120 }} >
+                                    <Select placeholder="Tên app gửi thông báo" style={{ width: 120 }} >
                                         <Option value="Driver">Driver</Option>
                                         <Option value="Customer">Customer</Option>
                                     </Select>
@@ -107,21 +107,21 @@ class SendNotification extends Component {
                                     name="title"
                                     rules={[{ required: true, message: 'Please input your title!' }]}
                                 >
-                                    <Input />
+                                    <Input placeholder="Nhập tiêu đề" />
                                 </Form.Item>
                                 <Form.Item
                                     label="Nội dung"
                                     name="body"
                                     rules={[{ required: true, message: 'Please input your body!' }]}
                                 >
-                                    <Input />
+                                    <Input placeholder="Nội dùng thông báo" />
                                 </Form.Item>
                                 <Form.Item
                                     label="Loại thông báo"
                                     name="type_noti"
                                     rules={[{ required: true, message: 'Please input your body!' }]}
                                 >
-                                    <Select >
+                                    <Select placeholder="Loại thông báo" >
                                         <Option value="PROMOTION_NOTIFICATION">Khuyến mại</Option>
                                         <Option value="ALERT_NOTIFICATION">Thông báo thường</Option>
                                     </Select>

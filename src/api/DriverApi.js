@@ -36,3 +36,10 @@ export const adminUnLockedAccountAPI = (id) => {
         data: { _id: id }
     })
 }
+export const adminAddPointToDriver = (body) => {
+    return api.makeAuthRequest({
+        url: `/admin/driver/addpoint`,
+        method: 'POST',
+        data: body
+    })
+}
