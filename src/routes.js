@@ -55,6 +55,7 @@ import lstLicense from './layouts/lstLicense'
 import lstCoupon from './layouts/lstCoupon'
 import SendNotification from './layouts/sendNotification'
 import lstCharge from './layouts/lstCharge'
+import lstBanner from './layouts/lstBanner'
 // 9Trip Admin React icons
 import Shop from "examples/Icons/Shop";
 import Office from "examples/Icons/Office";
@@ -151,6 +152,16 @@ const routes = [
     route: "/charge",
     icon: <Document size="12px" />,
     component: lstCharge,
+    noCollapse: true,
+    protected: true,
+  },
+  {
+    type: "collapse",
+    name: "D/S Banner",
+    key: "Banner",
+    route: "/banner",
+    icon: <Document size="12px" />,
+    component: lstBanner,
     noCollapse: true,
     protected: true,
   },

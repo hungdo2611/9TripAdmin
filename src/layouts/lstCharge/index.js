@@ -165,7 +165,7 @@ class lstCharge extends Component {
                 ),
             },
         ];
-        const { lst_charge, total, dataEdit, isModalVisible } = this.state
+        const { lst_charge, total } = this.state
         const lst_data = [...lst_charge];
         return (
             <DashboardLayout>
