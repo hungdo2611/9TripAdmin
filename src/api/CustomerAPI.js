@@ -23,3 +23,19 @@ export const getRecentBooking = (id) => {
     })
 }
 
+export const adminCancelBookingAPI = (body) => {
+    return api.makeAuthRequest({
+        url: `/admin/cancel/booking`,
+        method: 'POST',
+        data: body
+    })
+}
+
+export const adminFinishBookingAPI = (body) => {
+    return api.makeAuthRequest({
+        url: `/admin/finish/booking`,
+        method: 'POST',
+        data: body
+    })
+}
+

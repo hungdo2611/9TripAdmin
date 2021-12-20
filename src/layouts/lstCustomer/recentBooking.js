@@ -27,11 +27,11 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import moment from 'moment'
 
-import { Table, Input, notification } from 'antd';
+import { Table, Input, Space, notification } from 'antd';
 
 
 // Data
-import { getRecentBooking } from '../../api/CustomerAPI'
+import { getRecentBooking, adminFinishBookingAPI, adminCancelBookingAPI } from '../../api/CustomerAPI'
 import { Modal, Button } from 'antd';
 
 const { Search } = Input;
@@ -69,7 +69,38 @@ class recentBooking extends Component {
             <text>SDT: {data.phone}</text>
         </div>
     }
-
+    cancelBooking = async (dt) => {
+        let req = await adminCancelBookingAPI({ id: dt._id });
+        if (req && !req.err) {
+            notification["success"]({
+                message: 'Huỷ chuyến ok',
+                description:
+                    'OK',
+            });
+        } else {
+            notification["error"]({
+                message: 'Đã có lỗi xảy ra',
+                description:
+                    'Lỗi',
+            });
+        }
+    }
+    endBooking = async (dt) => {
+        let req = await adminFinishBookingAPI({ id: dt._id });
+        if (req && !req.err) {
+            notification["success"]({
+                message: 'kết thúc chuyến ok',
+                description:
+                    'OK',
+            });
+        } else {
+            notification["error"]({
+                message: 'Đã có lỗi xảy ra',
+                description:
+                    'Lỗi',
+            });
+        }
+    }
     render() {
 
         const { lst_journey, total, isModalVisible } = this.state
@@ -108,9 +139,17 @@ class recentBooking extends Component {
                 render: dt => <text>{dt.price ? dt.price : `${dt.range_price.max_price}đ - ${dt.range_price.min_price}đ`}</text>
             },
             {
-                title: 'Danh sách hành khách',
-                render: dt => <a onClick={() => this.setState({ isModalVisible: true, data_driver: dt.driver_id })}> Xem</a>,
+                title: 'Hành động',
+                render: (dt) => (
+                    <Space size="middle">
+                        <Button type="primary" onClick={() => this.setState({ isModalVisible: true, data_driver: dt.driver_id })}>Xem</Button>
+                        {dt.status !== 'END' && dt.status !== 'USER_CANCEL' && <Button onClick={() => this.cancelBooking(dt)} danger type="primary" >CANCEL</Button>}
+                        {dt.status !== 'END' && dt.status !== 'USER_CANCEL' && <Button onClick={() => this.endBooking(dt)} danger type="primary" >END</Button>}
+
+                    </Space>
+                ),
             },
+
         ];
         return (
             <DashboardLayout>
