@@ -50,7 +50,8 @@ class SendNotification extends Component {
             title: values.title,
             body: values.body,
             data: {
-                type: values.type_noti
+                type: values?.type_noti,
+                url: values?.url
             }
         }
         let reqSend = await sendNotificationAPI(body);
@@ -125,6 +126,13 @@ class SendNotification extends Component {
                                         <Option value="PROMOTION_NOTIFICATION">Khuyến mại</Option>
                                         <Option value="ALERT_NOTIFICATION">Thông báo thường</Option>
                                     </Select>
+                                </Form.Item>
+                                <Form.Item
+                                    label="Link URL"
+                                    name="url"
+                                    rules={[{ required: true, message: 'Please input your url!' }]}
+                                >
+                                    <Input placeholder="Link URL" />
                                 </Form.Item>
                                 <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                                     <Button type="primary" htmlType="submit">
